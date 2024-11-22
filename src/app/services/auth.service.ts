@@ -1,32 +1,29 @@
-// firebase-auth.service.ts
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { GoogleAuthProvider, FacebookAuthProvider } from 'firebase/auth';
+import { Auth, signInWithEmailAndPassword, GoogleAuthProvider, FacebookAuthProvider, signInWithPopup, sendPasswordResetEmail, sendEmailVerification, User } from '@angular/fire/auth';
 import { ConectDBService } from './conect-db.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FirebaseAuthService {
-
   private loggedInUser: string | null = null;
-  
+
   constructor(
-    private afAuth: AngularFireAuth,
+    private auth: Auth,
     private router: Router,
     private firebaseDbService: ConectDBService
   ) {}
 
   // RETORNA USUÁRIO ATUAL SE LOGADO
-  async getCurrentUser(): Promise<firebase.default.User | null> {
-    return this.afAuth.currentUser;
+  async getCurrentUser(): Promise<User | null> {
+    return this.auth.currentUser;
   }
 
   // LOGIN COM EMAIL/SENHA
   async login(email: string, password: string): Promise<void> {
     try {
-      const userCredential = await this.afAuth.signInWithEmailAndPassword(email, password);
+      const userCredential = await signInWithEmailAndPassword(this.auth, email, password);
       this.router.navigate(['/preferences']);
     } catch (error) {
       console.error('Erro no login:', error);
@@ -35,9 +32,9 @@ export class FirebaseAuthService {
 
   // ENVIA E-MAIL DE VERIFICAÇÃO PARA 2FA APÓS O LOGIN
   async sendVerificationEmail(): Promise<void> {
-    const user = await this.afAuth.currentUser;
+    const user = this.auth.currentUser;
     if (user && !user.emailVerified) {
-      await user.sendEmailVerification();
+      await sendEmailVerification(user);
     } else {
       console.log('Usuário não autenticado ou e-mail já verificado.');
     }
@@ -55,17 +52,17 @@ export class FirebaseAuthService {
   // FUNÇÃO PRIVADA PARA AUTENTICAÇÃO COM PROVIDERS EXTERNOS
   private async signInWithProvider(provider: any): Promise<boolean> {
     try {
-      await this.afAuth.signInWithPopup(provider);
+      await signInWithPopup(this.auth, provider);
       return true;
     } catch (error) {
       return false;
     }
   }
 
-  // FUNÇÃO DE RECUPERAÇÃO DE SENHA: ENVIA E-MAIL PARA REDIFINIÇÃO DE SENHA
+  // FUNÇÃO DE RECUPERAÇÃO DE SENHA: ENVIA E-MAIL PARA REDEFINIÇÃO DE SENHA
   async resetPassword(email: string): Promise<void> {
     try {
-      await this.afAuth.sendPasswordResetEmail(email);
+      await sendPasswordResetEmail(this.auth, email);
       console.log('E-mail para redefinição de senha enviado.');
     } catch (error) {
       console.error('Erro ao enviar e-mail de redefinição de senha:', error);

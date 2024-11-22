@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
-import { collection, collectionData, doc, getDoc, addDoc, updateDoc, deleteDoc, CollectionReference, WithFieldValue, DocumentData } from '@angular/fire/firestore';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { Firestore, collection, collectionData, doc, getDoc, addDoc, updateDoc, deleteDoc, CollectionReference, WithFieldValue, DocumentData } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ConectDBService {
-  constructor(private firestore: AngularFireAuth) {}
+  constructor(private firestore: Firestore) {}
 
   // MÉTODO GENÉRICO PARA OBTER UMA COLEÇÃO DO FIRESTORE
   getCollection<T extends DocumentData>(collectionName: string): Observable<T[]> {

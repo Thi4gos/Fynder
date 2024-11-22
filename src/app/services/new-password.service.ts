@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { Auth, sendPasswordResetEmail, updatePassword, User } from '@angular/fire/auth';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NewPasswordService {
-  constructor(private afAuth: AngularFireAuth) { }
+  constructor(private auth: Auth) { }
 
   // Método para enviar o email de redefinição de senha
   async sendPasswordResetEmail(email: string): Promise<string> {
     try {
-      await this.afAuth.sendPasswordResetEmail(email);
+      await sendPasswordResetEmail(this.auth, email);
       return "E-mail de recuperação enviado.";
     } catch (error) {
       throw "Erro ao enviar e-mail de recuperação: " + error;
@@ -19,11 +19,11 @@ export class NewPasswordService {
 
   // Método para atualizar a senha
   async changePassword(newPassword: string): Promise<string> {
-    const user = await this.afAuth.currentUser;
+    const user = this.auth.currentUser;
 
     if (user) {
       try {
-        await user.updatePassword(newPassword);
+        await updatePassword(user, newPassword);
         return "Senha atualizada com sucesso.";
       } catch (error) {
         throw "Erro ao atualizar senha: " + error;
