@@ -1,0 +1,65 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <img src="assets/logo.png" alt="Logo" class="logo"> <!-- Logo do aplicativo -->
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button (click)="forProfile()">Meu Perfil</ion-button>
+      <ion-button (click)="forLogin()">Acessar Login</ion-button>
+      <ion-button (click)="forRegistry()">Acessar Cadastro</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar>
+    <!-- Barra de pesquisa para buscar filmes -->
+    <ion-searchbar [(ngModel)]="searchTerm" (ionInput)="searchMovies()" placeholder="Buscar filmes"></ion-searchbar>
+    <ion-select placeholder="Filtrar por Gênero" [(ngModel)]="selectedGenre" (ionChange)="filterByGenre()">
+      <ion-select-option *ngFor="let genre of genres" [value]="genre.id">{{ genre.name }}</ion-select-option>
+    </ion-select>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- Spinner de carregamento: será exibido enquanto `isLoading` for verdadeiro -->
+  <ion-spinner *ngIf="isLoading" name="crescent" class="loading-spinner"></ion-spinner>
+
+  <!-- Exibição dos filmes: será exibido quando não estiver carregando -->
+  <div class="movies-container" *ngIf="!isLoading">
+    <ion-card *ngFor="let movie of movies" class="fade-in">
+      <!-- Imagem do poster do filme -->
+      <img
+        [src]="movie.poster_path ? 'https://image.tmdb.org/t/p/w500' + movie.poster_path : 'caminho/para/imagem-padrao.jpg'"
+        alt="{{ movie.title }}" loading="lazy"> <!-- Imagem padrão caso o poster não esteja disponível -->
+
+      <ion-card-header>
+        <!-- Título do filme -->
+        <ion-card-title class="movie-title">{{ movie.title }}</ion-card-title>
+        <!-- Data de lançamento do filme -->
+        <ion-card-subtitle>{{ movie.release_date }}</ion-card-subtitle>
+      </ion-card-header>
+
+      <ion-card-content>
+        <div class="rating-container">
+          <!-- Exibição das estrelas de avaliação -->
+          <span *ngFor="let star of [1, 2, 3, 4, 5]">
+            <ion-icon [name]="getStarIcon(movie.id, star).icon" [class]="getStarIcon(movie.id, star).colorClass"
+              (click)="rateMovie(movie.id, star)"></ion-icon>
+          </span>
+        </div>
+
+        <!-- Sinopse do filme -->
+        <p>{{ movie.overview }}</p>
+
+        <!-- Exibir provedores de streaming -->
+        <div *ngIf="streamingProviders[movie.id] && streamingProviders[movie.id].length > 0">
+          <p><strong>Disponível em:</strong></p>
+          <ul>
+            <li *ngFor="let provider of streamingProviders[movie.id]">{{ provider }}</li>
+          </ul>
+        </div>
+
+        <!-- Botão para assistir ao trailer -->
+        <ion-button expand="full" color="primary" (click)="watchTrailer(movie.id)">Assistir Trailer</ion-button>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

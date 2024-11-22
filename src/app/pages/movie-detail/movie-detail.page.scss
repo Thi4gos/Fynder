@@ -1,0 +1,101 @@
+.movie-details {
+    max-width: 100%; // Permite que o container utilize 100% da largura
+    margin: 0 auto; // Centraliza o container
+    padding: 10px; // Adiciona padding ao redor do container
+
+    ion-card {
+        background-color: #2c2c2c; // Fundo escuro para o cartão
+        color: white; // Texto branco
+        border-radius: 10px; // Bordas arredondadas
+        margin: 5px; // Diminui a margem
+        padding: 10px; // Adiciona padding interno ao cartão
+
+        img {
+            border-top-left-radius: 10px; // Bordas arredondadas para a parte superior
+            border-top-right-radius: 10px;
+            max-width: 80%; // Reduz o tamanho do pôster
+            height: auto; // Mantém a proporção
+            margin: 0 auto; // Centraliza a imagem
+            display: block; // Garante que a imagem seja tratada como um bloco
+        }
+
+        ion-card-title {
+            color: #f00; // Vermelho escuro para o título
+            font-size: 1.2em; // Ajuste o tamanho da fonte
+        }
+    }
+
+    ion-list-header {
+        background-color: #1f1f1f;
+        color: white;
+        font-size: 1em; // Ajusta o tamanho da fonte
+    }
+
+    .horizontal-scroll {
+        display: flex;
+        overflow-x: auto; // Permite rolagem horizontal
+        padding: 5px 0; // Diminui o padding
+
+        .cast-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: transparent;
+            border: none;
+            margin-right: 10px; // Margem entre cards
+            min-width: 100px; // Reduz o tamanho mínimo
+            text-align: center;
+
+            ion-avatar {
+                margin-bottom: 4px; // Diminui a margem
+                width: 60px; // Ajusta o tamanho da imagem
+                height: auto;
+            }
+
+            .cast-label {
+                font-size: 12px; // Diminui o tamanho da fonte
+
+                h3 {
+                    font-weight: bold;
+                    color: #f00;
+                    margin: 0;
+                }
+
+                p {
+                    font-size: 10px; // Diminui o tamanho da fonte
+                    color: white;
+                    margin: 0;
+                }
+            }
+        }
+    }
+
+    ion-item {
+        background-color: #2c2c2c;
+        color: white;
+        margin: 3px 0; // Diminui a margem
+
+        h3 {
+            color: #f00;
+        }
+    }
+
+    ion-button {
+        margin-top: 5px; // Diminui a margem
+        font-size: 0.9em; // Diminui o tamanho da fonte
+    }
+}
+
+.movie-details {
+    .horizontal-scroll {
+        display: flex;
+        overflow-x: auto;
+        padding: 10px;
+
+        .cast-card {
+            flex: 0 0 auto;
+            text-align: center;
+            margin: 0 10px;
+        }
+    }
+}

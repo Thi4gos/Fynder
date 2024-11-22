@@ -1,0 +1,14 @@
+<ion-item lines="none">
+  <ion-label position="floating">E-mail</ion-label>
+  <ion-input
+    [(ngModel)]="email"
+    type="email"
+    required
+    placeholder="Digite seu e-mail"
+    clearInput>
+  </ion-input>
+</ion-item>
+
+<ion-button expand="full" color="primary" (click)="onSendEmail()" class="ion-margin-top">
+  Enviar
+</ion-button>

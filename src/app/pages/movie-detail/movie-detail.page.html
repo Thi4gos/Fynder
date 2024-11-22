@@ -1,0 +1,78 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/search"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ movie?.title }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button color="secondary" (click)="toggleFavorite()">
+        <ion-icon [name]="isFavorite ? 'heart' : 'heart-outline'"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="movie" class="movie-details">
+  <ion-card>
+    <img [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path" alt="Pôster do Filme">
+    <ion-card-header>
+      <ion-card-title>{{ movie.title }}</ion-card-title>
+      <ion-card-subtitle>{{ movie.release_date | date:'dd/MM/yyyy' }}</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <p>{{ movie.overview }}</p>
+      <p><strong>Classificação Etária:</strong> {{ certification }}</p>
+      <p><strong>Gêneros:</strong> {{ movieGenres }}</p>
+      <p><strong>Avaliação:</strong> {{ movie.vote_average }} / 10</p>
+      <p><strong>Duração:</strong> {{ movie.runtime }} min</p>
+      <p><strong>Receita:</strong> R$ {{ movie.revenue | number: '1.0-0' }}</p>
+      <ion-button expand="full" color="tertiary" (click)="rateMovie('like')">👍</ion-button>
+      <ion-button expand="full" color="danger" (click)="rateMovie('dislike')">👎</ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-list>
+    <ion-list-header>
+      <h2>Elenco</h2>
+    </ion-list-header>
+    <div class="horizontal-scroll">
+      <div *ngFor="let member of cast" class="cast-card">
+        <ion-avatar>
+          <img [src]="'https://image.tmdb.org/t/p/w200' + member.profile_path" alt="Membro do Elenco">
+        </ion-avatar>
+        <div class="cast-label">
+          <h3>{{ member.name }}</h3>
+          <p>{{ member.character }}</p>
+        </div>
+      </div>
+    </div>
+  </ion-list>
+
+  <ion-list *ngIf="trailers.length > 0">
+    <ion-list-header>
+      <h2>Trailers</h2>
+    </ion-list-header>
+    <ion-item *ngFor="let trailer of trailers">
+      <ion-label>
+        <h3>{{ trailer.name }}</h3>
+      </ion-label>
+      <ion-button slot="end" color="primary" (click)="openTrailer(trailer.key)">
+        Assistir
+      </ion-button>
+    </ion-item>
+  </ion-list>
+
+  <ion-list *ngIf="watchProviders.length > 0">
+    <ion-list-header>
+      <h2>Onde Assistir</h2>
+    </ion-list-header>
+    <ion-item *ngFor="let provider of watchProviders">
+      <ion-avatar slot="start">
+        <img [src]="'https://image.tmdb.org/t/p/w92' + provider.logo_path" alt="{{ provider.provider_name }}">
+      </ion-avatar>
+      <ion-label>
+        <h3>{{ provider.provider_name }}</h3>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>

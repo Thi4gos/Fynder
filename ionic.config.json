@@ -1,0 +1,7 @@
+{
+  "name": "Fynder",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

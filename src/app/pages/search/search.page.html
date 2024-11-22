@@ -1,0 +1,113 @@
+<!-- search.page.html -->
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <img [src]="'assets/logo.png'" class="logo" alt="Logo">
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ng-container *ngIf="loggedInUser; else authButtons">
+        <ion-label>{{ loggedInUser }}</ion-label>
+        <ion-button (click)="logout()">Sair</ion-button>
+      </ng-container>
+      <ng-template #authButtons>
+        <ion-button routerLink="/login">
+          <ion-icon></ion-icon>
+          Login
+        </ion-button>
+        <ion-button routerLink="/registry">
+          <ion-icon></ion-icon>
+          Registrar
+        </ion-button>
+      </ng-template>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content [scrollEvents]="true" class="smooth-scroll">
+  <!-- Barra de Busca com ícone e placeholder -->
+  <ion-searchbar
+    [(ngModel)]="query"
+    (ionInput)="onSearchInput($event)"
+    placeholder="Busque por filmes ou séries"
+    [debounce]="300"
+    animated>
+  </ion-searchbar>
+
+  <!-- Filtro de Gêneros -->
+  <ion-segment [(ngModel)]="selectedGenre" (ionChange)="filterByGenre($event)" scrollable>
+    <ion-segment-button value="all">
+      <ion-label>Todos</ion-label>
+    </ion-segment-button>
+    <ion-segment-button *ngFor="let genre of genres" [value]="genre.id">
+      <ion-label>{{genre.name}}</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
+    <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
+  </div>
+
+  <!-- Resultados -->
+  <ng-container *ngIf="!isLoading">
+    <!-- Seção de Filmes -->
+    <ion-list-header *ngIf="filteredResults.length > 0">
+      <ion-label class="genre-header">Filmes</ion-label>
+    </ion-list-header>
+    
+    <ion-grid>
+      <ion-row>
+        <ion-col size="12" size-sm="6" size-md="4" size-lg="3" *ngFor="let movie of filteredResults">
+          <ion-card (click)="navigateToMovieDetails(movie.id)">
+            <img 
+              [src]="movie.poster_path ? 'https://image.tmdb.org/t/p/w500' + movie.poster_path : 'assets/no-poster.png'"
+              [alt]="movie.title"
+              loading="lazy">
+            <ion-card-header>
+              <ion-card-title>{{ movie.title }}</ion-card-title>
+              <ion-card-subtitle>{{ movie.release_date | date:'dd/MM/yyyy' }}</ion-card-subtitle>
+            </ion-card-header>
+            <ion-card-content>
+              {{ movie.overview | slice:0:100 }}...
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <!-- Seção de Séries -->
+    <ion-list-header *ngIf="filteredResults.length > 0">
+      <ion-label class="genre-header">Séries</ion-label>
+    </ion-list-header>
+    
+    <ion-grid>
+      <ion-row>
+        <ion-col size="12" size-sm="6" size-md="4" size-lg="3" *ngFor="let series of filteredSeries">
+          <ion-card (click)="navigateToSeriesDetails(series.id)">
+            <img 
+              [src]="series.poster_path ? 'https://image.tmdb.org/t/p/w500' + series.poster_path : 'assets/no-poster.png'"
+              [alt]="series.title"
+              loading="lazy">
+            <ion-card-header>
+              <ion-card-title>{{ series.title }}</ion-card-title>
+              <ion-card-subtitle>{{ series.release_date | date:'dd/MM/yyyy' }}</ion-card-subtitle>
+            </ion-card-header>
+            <ion-card-content>
+              {{ series.overview | slice:0:100 }}...
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ng-container>
+
+  <!-- Mensagem de Nenhum Resultado -->
+  <div *ngIf="!isLoading && filteredResults.length === 0 && filteredSeries.length === 0" class="no-results">
+    <ion-text color="medium">
+      <h2>Nenhum resultado encontrado</h2>
+      <p>Tente buscar com outros termos</p>
+    </ion-text>
+  </div>
+</ion-content>

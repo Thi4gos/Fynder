@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/profile" aria-label="Voltar para o perfil"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Editar Preferências</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <!-- Gêneros Preferidos -->
+    <ion-item>
+      <ion-label>Gêneros Preferidos</ion-label>
+      <ion-select multiple [(ngModel)]="userPreferences.genres">
+        <ion-select-option *ngFor="let genre of genres" [value]="genre.id">
+          {{ genre.name }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <!-- Notificações -->
+    <ion-item>
+      <ion-label>Notificações</ion-label>
+      <ion-toggle [(ngModel)]="userPreferences.notifications">
+        Ativar Notificações
+      </ion-toggle>
+    </ion-item>
+  </ion-list>
+
+  <ion-button expand="full" (click)="savePreferences()">Salvar</ion-button>
+</ion-content>

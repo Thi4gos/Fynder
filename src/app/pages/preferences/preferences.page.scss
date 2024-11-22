@@ -1,0 +1,19 @@
+ion-item {
+    --background: #2e2e2e; // Fundo dos itens
+    color: white; // Texto branco
+    margin: 10px;
+    border-radius: 5px; // Bordas arredondadas
+}
+
+ion-label {
+    color: #b22222; // Cor dos rótulos
+}
+
+ion-select {
+    --background: #2e2e2e; // Fundo do seletor
+    color: white; // Texto branco
+}
+
+ion-toggle {
+    --background: #b22222; // Cor do toggle
+}

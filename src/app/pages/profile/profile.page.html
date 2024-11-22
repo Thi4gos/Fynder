@@ -1,0 +1,74 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/search" aria-label="Voltar para a Pesquisa"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Meu Perfil</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <!-- Seção de Informações do Usuário -->
+  <ion-card class="user-info-card">
+    <ion-item lines="none">
+      <ion-avatar slot="start">
+        <img [src]="user.photoUrl" alt="Foto do Usuário">
+      </ion-avatar>
+      <div class="user-details">
+        <h2>{{ user.name }}</h2>
+        <p>{{ user.email }}</p>
+      </div>
+    </ion-item>
+  </ion-card>
+
+  <!-- Lista de Favoritos -->
+  <ion-card *ngIf="user.favorites?.length > 0; else noFavorites">
+    <ion-card-header>
+      <ion-card-title>Favoritos</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item *ngFor="let favorite of user.favorites" lines="inset">
+          <ion-label>{{ favorite }}</ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+  <ng-template #noFavorites>
+    <ion-text color="medium" class="ion-padding">
+      <p>Nenhum favorito adicionado.</p>
+    </ion-text>
+  </ng-template>
+
+  <!-- Lista de Avaliações -->
+  <ion-card *ngIf="user.reviews?.length > 0; else noReviews">
+    <ion-card-header>
+      <ion-card-title>Avaliações</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item *ngFor="let review of user.reviews" lines="inset">
+          <ion-label>{{ review }}</ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+  <ng-template #noReviews>
+    <ion-text color="medium" class="ion-padding">
+      <p>Nenhuma avaliação encontrada.</p>
+    </ion-text>
+  </ng-template>
+
+  <!-- Botões de Ação -->
+  <div class="action-buttons">
+    <ion-button expand="full" color="primary" (click)="editPreferences()" aria-label="Editar Preferências">
+      <ion-icon slot="start" name="settings-outline"></ion-icon> Editar Preferências
+    </ion-button>
+    <ion-button expand="full" color="danger" (click)="logout()" aria-label="Sair do Aplicativo">
+      <ion-icon slot="start" name="log-out-outline"></ion-icon> Sair
+    </ion-button>
+    <ion-button expand="full" color="tertiary" routerLink="/change-password" aria-label="Alterar Senha">
+      <ion-icon slot="start" name="key-outline"></ion-icon> Alterar Senha
+    </ion-button>
+  </div>
+</ion-content>

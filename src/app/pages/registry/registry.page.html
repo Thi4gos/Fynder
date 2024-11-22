@@ -1,0 +1,95 @@
+<ion-content class="ion-padding">
+  <div class="logo-container">
+    <img src="assets/img/logoTypes/PNG/Finder-removebg-preview.png" 
+         alt="Logo" 
+         class="logo-img">
+  </div>
+
+  <form [formGroup]="registryForm" (ngSubmit)="onRegister()">
+    <!-- Campo de Nome -->
+    <ion-item [class.invalid]="isInvalid('firstName')">
+      <ion-input formControlName="firstName" type="text" label="Nome" labelPlacement="floating"></ion-input>
+      <ion-icon name="checkmark-circle" slot="end" *ngIf="isValid('firstName')"></ion-icon>
+      <ion-note slot="error" *ngIf="isTouchedAndInvalid('firstName', 'required')">
+        Nome é obrigatório
+      </ion-note>
+    </ion-item>
+
+    <!-- Campo de Sobrenome -->
+    <ion-item [class.invalid]="isInvalid('lastName')">
+      <ion-input formControlName="lastName" type="text" label="Sobrenome" labelPlacement="floating"></ion-input>
+      <ion-icon name="checkmark-circle" slot="end" *ngIf="isValid('lastName')"></ion-icon>
+      <ion-note slot="error" *ngIf="isTouchedAndInvalid('lastName', 'required')">
+        Sobrenome é obrigatório
+      </ion-note>
+    </ion-item>
+
+    <!-- Campo de Telefone -->
+    <ion-item [class.invalid]="isInvalid('tel')">
+      <ion-input formControlName="tel" type="tel" label="Telefone" labelPlacement="floating"></ion-input>
+      <ion-icon name="checkmark-circle" slot="end" *ngIf="isValid('tel')"></ion-icon>
+      <ion-note slot="error" *ngIf="isTouchedAndInvalid('tel', 'required')">
+        Telefone é obrigatório
+      </ion-note>
+    </ion-item>
+
+    <!-- Campo de Data de Nascimento -->
+    <ion-item [class.invalid]="isInvalid('birthDate')">
+      <ion-input formControlName="birthDate" type="date" label="Data de Nascimento" labelPlacement="floating"></ion-input>
+      <ion-icon name="checkmark-circle" slot="end" *ngIf="isValid('birthDate')"></ion-icon>
+      <ion-note slot="error" *ngIf="isTouchedAndInvalid('birthDate', 'required')">
+        Data de nascimento é obrigatória
+      </ion-note>
+    </ion-item>
+
+    <!-- Campo de Email -->
+    <ion-item [class.invalid]="isInvalid('email')">
+      <ion-input formControlName="email" type="email" label="Email" labelPlacement="floating"></ion-input>
+      <ion-icon name="checkmark-circle" slot="end" *ngIf="isValid('email')"></ion-icon>
+      <ion-note slot="error" *ngIf="isTouchedAndInvalid('email', 'required')">
+        Email é obrigatório
+      </ion-note>
+      <ion-note slot="error" *ngIf="isTouchedAndInvalid('email', 'email')">
+        Email inválido
+      </ion-note>
+    </ion-item>
+
+    <!-- Campo de Senha -->
+    <ion-item [class.invalid]="isInvalid('pass')">
+      <ion-input [type]="showPassword ? 'text' : 'password'" formControlName="pass" label="Senha" labelPlacement="floating"></ion-input>
+      <ion-icon slot="end" [name]="showPassword ? 'eye-off' : 'eye'" (click)="toggleShowPassword()"></ion-icon>
+      <ion-note slot="error" *ngIf="isTouchedAndInvalid('pass', 'required')">
+        Senha é obrigatória
+      </ion-note>
+      <ion-note slot="error" *ngIf="isTouchedAndInvalid('pass', 'minlength')">
+        Senha deve ter no mínimo 6 caracteres
+      </ion-note>
+    </ion-item>
+
+    <!-- Campo de Confirmar Senha -->
+    <ion-item [class.invalid]="isInvalid('confirmPass')">
+      <ion-input formControlName="confirmPass" type="password" label="Confirmar Senha" labelPlacement="floating"></ion-input>
+      <ion-note slot="error" *ngIf="registryForm.errors?.['passwordMismatch']">
+        Senhas não conferem
+      </ion-note>
+    </ion-item>
+
+    <!-- Termos de Uso -->
+    <ion-item>
+      <ion-checkbox formControlName="termsAccepted"></ion-checkbox>
+      <ion-label class="ion-padding-start">
+        Eu aceito os <a href="/terms">termos de uso</a>
+      </ion-label>
+    </ion-item>
+
+    <!-- Botão de Registro -->
+    <ion-button expand="block" type="submit" [disabled]="!registryForm.valid || isSubmitting">
+      {{ isSubmitting ? 'Registrando...' : 'Registrar' }}
+    </ion-button>
+
+    <!-- Link para Login -->
+    <div class="login-link">
+      Já tem uma conta? <a routerLink="/login">Faça login</a>
+    </div>
+  </form>
+</ion-content>

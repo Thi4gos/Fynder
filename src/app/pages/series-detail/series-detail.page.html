@@ -1,0 +1,81 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/search"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ series.name }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button color="secondary" (click)="toggleFavorite()">
+        <ion-icon [name]="isFavorite ? 'heart' : 'heart-outline'"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="series" class="series-details">
+  <ion-card>
+    <img [src]="'https://image.tmdb.org/t/p/w500' + series.poster_path" alt="Pôster da Série">
+    <ion-card-header>
+      <ion-card-title>{{ series.name }}</ion-card-title>
+      <!-- Data de lançamento formatada -->
+      <ion-card-subtitle>{{ series.first_air_date | date:'dd/MM/yyyy' }}</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <p>{{ series.overview }}</p>
+      <p *ngIf="seriesCertification"><strong>Classificação Indicativa:</strong> {{ seriesCertification }}</p>
+      <p *ngIf="series.genres && series.genres.length > 0">
+        <strong>Gêneros:</strong> {{ seriesGenres }}
+      </p>
+      <p><strong>Avaliação:</strong> {{ series.vote_average }} / 10</p>
+      <p><strong>Duração:</strong> {{ series.episode_run_time[0] }} min</p>
+      <p><strong>Nº de temporadas:</strong> {{ series.number_of_seasons }}</p>
+      <ion-button expand="full" color="tertiary" (click)="rateSeries('like')">👍</ion-button>
+      <ion-button expand="full" color="danger" (click)="rateSeries('dislike')">👎</ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-list>
+    <ion-list-header>
+      <h2>Elenco</h2>
+    </ion-list-header>
+    <div class="horizontal-scroll">
+      <div *ngFor="let member of cast" class="cast-card">
+        <ion-avatar>
+          <img [src]="'https://image.tmdb.org/t/p/w200' + member.profile_path" alt="Membro do Elenco">
+        </ion-avatar>
+        <div class="cast-label">
+          <h3>{{ member.name }}</h3>
+          <p>{{ member.character }}</p>
+        </div>
+      </div>
+    </div>
+  </ion-list>
+
+  <ion-list *ngIf="trailers.length > 0">
+    <ion-list-header>
+      <h2>Trailers</h2>
+    </ion-list-header>
+    <ion-item *ngFor="let trailer of trailers">
+      <ion-label>
+        <h3>{{ trailer.name }}</h3>
+      </ion-label>
+      <ion-button slot="end" color="primary" (click)="openTrailer(trailer.key)">
+        Assistir
+      </ion-button>
+    </ion-item>
+  </ion-list>
+
+  <ion-list *ngIf="watchProviders.length > 0">
+    <ion-list-header>
+      <h2>Onde Assistir</h2>
+    </ion-list-header>
+    <ion-item *ngFor="let provider of watchProviders">
+      <ion-avatar slot="start">
+        <img [src]="'https://image.tmdb.org/t/p/w92' + provider.logo_path" alt="{{ provider.provider_name }}">
+      </ion-avatar>
+      <ion-label>
+        <h3>{{ provider.provider_name }}</h3>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>

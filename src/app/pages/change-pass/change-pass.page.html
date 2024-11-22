@@ -1,0 +1,16 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/login"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Recuperação de Senha</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <!-- Exibe o componente de entrada de e-mail até que resetEmailSent seja true -->
+  <app-email-entry *ngIf="!resetEmailSent" (sendEmail)="sendResetEmail()"></app-email-entry>
+  
+  <!-- Exibe o componente de confirmação de senha após o envio do e-mail -->
+  <app-confirm-password *ngIf="resetEmailSent"></app-confirm-password>
+</ion-content>
