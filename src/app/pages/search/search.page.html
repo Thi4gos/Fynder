@@ -2,22 +2,23 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <img [src]="'assets/logo.png'" class="logo" alt="Logo">
+      <img [src]="'assets/img/logoTypes/PNG/Finder-removebg-preview.png'" class="logo" alt="Logo">
     </ion-buttons>
     <ion-buttons slot="end">
       <ng-container *ngIf="loggedInUser; else authButtons">
-        <ion-label>{{ loggedInUser }}</ion-label>
-        <ion-button (click)="logout()">Sair</ion-button>
+        <ion-button routerLink="/profile">
+          <ion-icon name="person-outline"></ion-icon>
+        </ion-button>
       </ng-container>
       <ng-template #authButtons>
         <ion-button routerLink="/login">
-          <ion-icon></ion-icon>
-          Login
-        </ion-button>
+          <ion-icon name="log-in-outline"></ion-icon>
+            Login
+          </ion-button>
         <ion-button routerLink="/registry">
           <ion-icon></ion-icon>
-          Registrar
-        </ion-button>
+            Registrar
+          </ion-button>
       </ng-template>
     </ion-buttons>
   </ion-toolbar>

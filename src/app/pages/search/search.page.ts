@@ -22,25 +22,25 @@ export class SearchPage implements OnInit {
   isLoading: boolean = false;
   error: string | null = null;
   
+  loggedInUser: string | null = null;
+  
   constructor(
     private tmdbService: TmdbService,
     private router: Router,
     private errorService: ErrorService,
     private authservice: FirebaseAuthService,
   ) {}
-  loggedInUser: string | null = null;
 
   ngOnInit() {
-    this.loggedInUser = this.authservice.getLoggedInUser();
+    this.authservice.loggedInUser$.subscribe((email) => {
+      this.loggedInUser = email;
+    });
+  
     this.getPopularMovies();
     this.getPopularSeries();
     this.loadGenres();
   }
-
-  logout() {
-    this.authservice.clearUser();
-    this.router.navigate(['/login']);
-  }
+  
   
   navigateToMovieDetails(movieId: number) {
     this.router.navigate(['/movie', movieId]);

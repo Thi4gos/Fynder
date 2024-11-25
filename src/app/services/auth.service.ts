@@ -1,19 +1,26 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Auth, signInWithEmailAndPassword, GoogleAuthProvider, FacebookAuthProvider, signInWithPopup, sendPasswordResetEmail, sendEmailVerification, User } from '@angular/fire/auth';
+import { BehaviorSubject } from 'rxjs';
+import { Firestore, doc, getDoc } from '@angular/fire/firestore';
+import { Auth, onAuthStateChanged, signInWithEmailAndPassword, GoogleAuthProvider, FacebookAuthProvider, signInWithPopup, sendPasswordResetEmail, sendEmailVerification, User } from '@angular/fire/auth';
 import { ConectDBService } from './conect-db.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FirebaseAuthService {
-  private loggedInUser: string | null = null;
-
+  private loggedInUser = new BehaviorSubject<string | null>(null);
+  public loggedInUser$ = this.loggedInUser.asObservable();
   constructor(
+    private firestore: Firestore,
     private auth: Auth,
     private router: Router,
     private firebaseDbService: ConectDBService
-  ) {}
+  ) {
+    onAuthStateChanged(this.auth, (user: User | null) => {
+      this.loggedInUser.next(user?.email || null);
+    });
+  }
 
   // RETORNA USUÁRIO ATUAL SE LOGADO
   async getCurrentUser(): Promise<User | null> {
@@ -24,7 +31,6 @@ export class FirebaseAuthService {
   async login(email: string, password: string): Promise<void> {
     try {
       const userCredential = await signInWithEmailAndPassword(this.auth, email, password);
-      this.router.navigate(['/preferences']);
     } catch (error) {
       console.error('Erro no login:', error);
     }
@@ -69,15 +75,31 @@ export class FirebaseAuthService {
     }
   }
 
-  setLoggedInUser(email: string) {
-    this.loggedInUser = email;
+  setLoggedInUser(email: string): void {
+    this.loggedInUser.next(email);
   }
 
-  getLoggedInUser(): string | null {
-    return this.loggedInUser;
+  async getLoggedInUser(): Promise<string | null> {
+    const user = await this.auth.currentUser;
+    return user?.email || null;
   }
 
-  clearUser() {
-    this.loggedInUser = null;
+  async getUserData(email: string): Promise<any> {
+    const docRef = doc(this.firestore, `Usuarios/${email}`);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      return docSnap.data();
+    } else {
+      console.error('Usuário não encontrado');
+      return null;
+    }
   }
+
+  async logout(): Promise<void> {
+    try {
+      await this.auth.signOut();
+    } catch (error) {
+      console.error('Erro ao fazer logout:', error);
+    }}
 }

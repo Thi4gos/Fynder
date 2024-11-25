@@ -29,6 +29,7 @@
     <ion-card-content>
       <ion-list>
         <ion-item *ngFor="let favorite of user.favorites" lines="inset">
+          <ion-icon slot="start" name="star-outline" color="warning"></ion-icon>
           <ion-label>{{ favorite }}</ion-label>
         </ion-item>
       </ion-list>
@@ -48,6 +49,7 @@
     <ion-card-content>
       <ion-list>
         <ion-item *ngFor="let review of user.reviews" lines="inset">
+          <ion-icon slot="start" name="chatbubble-outline" color="secondary"></ion-icon>
           <ion-label>{{ review }}</ion-label>
         </ion-item>
       </ion-list>
@@ -60,7 +62,7 @@
   </ng-template>
 
   <!-- Botões de Ação -->
-  <div class="action-buttons">
+  <div class="action-buttons ion-margin-top">
     <ion-button expand="full" color="primary" (click)="editPreferences()" aria-label="Editar Preferências">
       <ion-icon slot="start" name="settings-outline"></ion-icon> Editar Preferências
     </ion-button>

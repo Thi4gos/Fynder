@@ -1,15 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { FirebaseAuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.page.html',
   styleUrls: ['./profile.page.scss'],
 })
-export class ProfilePage {
+export class ProfilePage implements OnInit {
   user: any;
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private auth: FirebaseAuthService) {
     // Definindo um usuário fictício
     this.user = {
       name: 'Nome do Usuário',
@@ -19,6 +20,13 @@ export class ProfilePage {
       reviews: ['Ótimo filme!', 'Muito interessante!', 'Gostei bastante!']
     };
   }
+   
+  async ngOnInit() {
+    const loggedInUser = await this.auth.getCurrentUser();
+    if (loggedInUser) {
+      this.user = await this.auth.getUserData(loggedInUser.email!);
+    }
+  }
 
   editPreferences() {
     // Redireciona para a página de preferências
@@ -26,7 +34,7 @@ export class ProfilePage {
   }
 
   logout() {
-    // Lógica para logout do usuário
-    console.log('Logout chamado');
+    this.auth.logout();
+    this.router.navigate(['/login']);
   }
 }

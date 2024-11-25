@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
-import { NavController } from '@ionic/angular';
+import { Router } from '@angular/router';
+import { ToastService } from 'src/app/services/toast.service';
+import { FirebaseAuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -7,9 +9,32 @@ import { NavController } from '@ionic/angular';
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage {
-  constructor(private navCtrl: NavController) {}
+  email: string = ''
+  pass: string = ''
+
+  constructor(private router: Router, private  auth: FirebaseAuthService, private toast: ToastService) {}
+
+  loginWithGoogle() {
+    this.auth.loginWithGoogle()
+  }
+
+  loginWithFacebook() {
+    this.auth.loginWithFacebook()
+  }
+  
+  async loginWithEmailPass() {
+    this.auth.login(this.email, this.pass)
+    .then(
+      () => {
+        this.toast.showToast("Login bem sucedido!", "sucess")
+        this.router.navigate(['/search'])
+    })
+    .catch((error) => {
+      this.toast.showToast("Error ao logar:", error)
+    })
+  }
 
   goBackToHome() {
-    this.navCtrl.navigateBack('/search'); // Redireciona para a página "search"
+    this.router.navigate(['/search']);
   }
 }

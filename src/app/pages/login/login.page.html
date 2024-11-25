@@ -17,7 +17,7 @@
     <ion-input placeholder="Senha" type="password"></ion-input>
   </ion-item>
 
-  <ion-button expand="block" color="" class="login-button">Login</ion-button>
+  <ion-button (click)="loginWithEmailPass()" expand="block" color="" class="login-button">Login</ion-button>
 
   <div class="register-container">
     <span>Ainda não tem conta?</span>
@@ -25,8 +25,11 @@
     <a href="/change-pass">Esqueceu a senha?</a>
   </div>
 
-  <div class="google-login">
-    <ion-icon name="logo-google"></ion-icon>
-    <span>ou</span>
+  <div class="flex-providers">
+    <div class="login-providers">
+      <ion-icon (click)="loginWithGoogle()" name="logo-google" size="large"></ion-icon>
+      <span>ou</span>
+      <ion-icon (click)="loginWithFacebook()" name="logo-facebook" size="large"></ion-icon>
+    </div>
   </div>
 </ion-content>
