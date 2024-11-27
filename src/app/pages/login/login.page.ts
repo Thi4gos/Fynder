@@ -9,32 +9,50 @@ import { FirebaseAuthService } from 'src/app/services/auth.service';
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage {
-  email: string = ''
-  pass: string = ''
+  email: string = '';
+  pass: string = '';
+  
 
-  constructor(private router: Router, private  auth: FirebaseAuthService, private toast: ToastService) {}
+  constructor(private router: Router, private auth: FirebaseAuthService, private toast: ToastService) {}
+
+  validateEmail(email: string): boolean {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(email);
+  }
+
+  async loginWithEmailPass() {
+    if (!this.validateEmail(this.email)) {
+      this.toast.showToast('E-mail inválido. Por favor, corrija.', 'warning');
+      return;
+    }
+
+    try {
+      await this.auth.login(this.email, this.pass);
+      this.toast.showToast('Login bem-sucedido!', 'success');
+      this.router.navigate(['/search']);
+    } catch (error: any) {
+      const errorCode = error?.code || 'unknown';
+      const errorMessage =
+        errorCode === 'auth/invalid-email'
+          ? 'E-mail inválido. Verifique o formato.'
+          : errorCode === 'auth/user-not-found'
+          ? 'Usuário não encontrado. Verifique seu e-mail.'
+          : errorCode === 'auth/wrong-password'
+          ? 'Senha incorreta. Tente novamente.'
+          : 'Erro inesperado no login.';
+      this.toast.showToast(errorMessage, 'danger');
+    }
+  }
 
   loginWithGoogle() {
-    this.auth.loginWithGoogle()
+    this.auth.loginWithGoogle();
   }
 
   loginWithFacebook() {
-    this.auth.loginWithFacebook()
-  }
-  
-  async loginWithEmailPass() {
-    this.auth.login(this.email, this.pass)
-    .then(
-      () => {
-        this.toast.showToast("Login bem sucedido!", "sucess")
-        this.router.navigate(['/search'])
-    })
-    .catch((error) => {
-      this.toast.showToast("Error ao logar:", error)
-    })
+    this.auth.loginWithFacebook();
   }
 
-  goBackToHome() {
-    this.router.navigate(['/search']);
+  goToPage(page: string) {
+    this.router.navigate([page]);
   }
 }

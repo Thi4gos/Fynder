@@ -27,14 +27,23 @@ export class FirebaseAuthService {
     return this.auth.currentUser;
   }
 
-  // LOGIN COM EMAIL/SENHA
   async login(email: string, password: string): Promise<void> {
     try {
       const userCredential = await signInWithEmailAndPassword(this.auth, email, password);
+      const userData = await this.getUserData(email);
+  
+      if (userData) {
+        this.setLoggedInUser(email);
+        console.log('Dados do usuário carregados:', userData);
+      } else {
+        console.warn('Usuário logado, mas sem dados adicionais no Firestore.');
+      }
     } catch (error) {
       console.error('Erro no login:', error);
+      throw error; // Permite que o componente trate o erro
     }
   }
+  
 
   // ENVIA E-MAIL DE VERIFICAÇÃO PARA 2FA APÓS O LOGIN
   async sendVerificationEmail(): Promise<void> {
